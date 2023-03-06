@@ -1,4 +1,7 @@
+import pickle
+
 import pytest
+import selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 @pytest.fixture(autouse=True)
 def testing():
-    pytest.driver = webdriver.Chrome('c:/python/chromedriver_win32/chromedriver.exe')
+    pytest.driver = webdriver.Chrome()
     # Переходим на страницу авторизации
     pytest.driver.get('http://petfriends.skillfactory.ru/login')
 
@@ -27,7 +30,8 @@ def test_show_my_pets():
     pytest.driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
     # Проверяем, что мы оказались на главной странице
     pytest.driver.find_element(By.CSS_SELECTOR, 'div#navbarNav > ul > li > a').click()
-
+    with open('my_cookies.txt', 'wb') as cookies:
+        pickle.dump(selenium.get_cookies(), cookies)
 
     # Проверяем, что в списке нет повторяющихся имен
     list_names = []
